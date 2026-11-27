@@ -1,0 +1,31 @@
+# Canned answers for questions that never need a tool call or a fresh LLM round trip.
+# The router checks these (via light keyword/embedding match) before invoking any agent.
+faqs:
+  - id: payment_methods
+    triggers: ["payment methods", "how do i pay", "pay online", "cash on delivery"]
+    answer: >
+      Kapruka orders placed through this assistant are guest-checkout: you'll get a
+      secure click-to-pay link after checkout, supporting cards and other methods
+      available on Kapruka's payment page. No Kapruka account is required.
+
+  - id: order_change_window
+    triggers: ["can i change my order", "cancel order", "edit order after placing"]
+    answer: >
+      Once an order is placed on Kapruka, changes need to go through Kapruka's own
+      customer support — this assistant can track your order status, but can't modify
+      an order that's already been submitted.
+
+  - id: what_is_this
+    triggers: ["what can you do", "who are you", "what is this"]
+    answer: >
+      I'm your Kapruka shopping assistant — I can help you find products, check if
+      something can be delivered where you need it, remember preferences and allergies
+      for people you shop for, manage your cart, and take you through checkout, all
+      through chat.
+
+  - id: price_lock
+    triggers: ["price guarantee", "price lock", "will the price change"]
+    answer: >
+      Prices are locked for 60 minutes once you start checkout, matching Kapruka's own
+      guest-checkout policy — so the price you see at checkout is what you pay if you
+      complete payment within that window.

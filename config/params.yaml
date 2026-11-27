@@ -1,0 +1,82 @@
+memory:
+  short_term_window: 12
+  short_term_ttl_minutes: 120
+  semantic_top_k: 5
+  summarize_after_turns: 20
+
+recommendation:
+  # Retrieve until we have enough HARD-eligible products, not merely until
+  # the first search call returns some products. Aim for twelve recommendations;
+  # if fewer qualify after the configured retrieval limits are exhausted, show
+  # the eligible products that were found.
+  target_recommendations: 12
+
+  # Number of MCP result rows requested per query in each retrieval round.
+  search_limit: 12
+
+  # Upper bound for one retrieval round after merging multiple search queries.
+  # Keep this large enough to avoid throwing away otherwise-valid candidates.
+  max_enrichment_candidates: 30
+
+  # Continue paginating until the target is met or these safety limits are hit.
+  max_retrieval_rounds: 4
+  max_candidate_budget: 72
+
+  # Product-detail enrichment uses bounded concurrency and retries so one
+  # transient MCP failure does not silently remove a candidate.
+  enrichment_concurrency: 8
+  enrichment_max_attempts: 3
+
+  # Maximum number of products shown to the user. The actual number shown is
+  # min(final_limit, available eligible products), with the normal target above
+  # controlling how much retrieval/ranking work is performed.
+  final_limit: 12
+
+  normalizer_batch_size: 8
+
+catalog:
+  # Broad retrieval pool. This is intentionally larger than the final
+  # displayed result count so ranking/eligibility has enough candidates.
+  initial_result_limit: 15
+
+cart:
+  max_items: 50
+  price_lock_minutes: 60
+
+mcp:
+  server_name: kapruka
+  timeout_seconds: 15
+  requests_per_minute: 60
+  orders_per_hour: 30
+  retry:
+    max_attempts: 3
+    backoff_seconds: 1.5
+    backoff_multiplier: 2.0
+
+checkout:
+  # Kapruka's delivery rules are based on Sri Lankan local dates.
+  # Use this timezone when calculating "today" and candidate delivery dates.
+  delivery_timezone: Asia/Colombo
+
+  # Maximum number of calendar days to examine when automatically finding
+  # the earliest common delivery date for the entire cart.
+  #
+  # The search stops immediately when the first fully valid date is found,
+  # so this is a hard upper bound rather than the number of requests normally
+  # generated.
+  earliest_delivery_search_days: 7
+
+reflection:
+  enabled_for_intents:
+    - gift_recommendation
+    - add_to_cart_for_recipient
+  max_revise_iterations: 3
+
+cache:
+  categories_ttl_minutes: 60
+  delivery_cities_ttl_minutes: 60
+  order_status_ttl_minutes: 5
+
+observability:
+  langfuse_enabled: true
+  sample_rate: 1.0

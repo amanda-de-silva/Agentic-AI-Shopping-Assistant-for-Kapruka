@@ -1,0 +1,78 @@
+llm:
+  provider: openrouter
+  base_url_env: OPENROUTER_BASE_URL
+  api_key_env: OPENROUTER_API_KEY
+
+  # ---------------------------------------------------------------------------
+  # Task-specific chat models
+  # ---------------------------------------------------------------------------
+
+  # Fast structured language normalization / detection.
+  language_model: openai/gpt-4.1-nano
+
+  # Fast intent + slot classification.
+  router_model: openai/gpt-4.1-nano
+
+  # Fast durable-memory fact extraction.
+  memory_model: openai/gpt-4.1-nano
+
+  # Medium reasoning for current-turn shopping requirement parsing.
+  requirement_parser_model: openai/gpt-4.1-mini
+
+  # Medium model for semantic normalization of messy Kapruka product data.
+  product_normalizer_model: openai/gpt-4.1-mini
+
+  # Medium model for ranking already-eligible products.
+  ranker_model: openai/gpt-4.1-mini
+
+  # Medium model for the final conversational response.
+  composer_model: openai/gpt-4.1-mini
+
+  # Generic/default model used by tasks that do not have a dedicated
+  # task-specific model mapping.
+  chat_model: openai/gpt-5.6-luna-pro
+
+  # Kept separate for reflection/safety reasoning.
+  reflection_model: openai/gpt-5.6-luna-pro
+
+  # ---------------------------------------------------------------------------
+  # Embeddings
+  # ---------------------------------------------------------------------------
+
+  embedding_model: openai/text-embedding-3-small
+  embedding_dimensions: 1536
+
+  # Sparse (BM25/keyword) side of the hybrid search used for Qdrant recall.
+  # Runs locally via fastembed -- not an OpenRouter call.
+  sparse_embedding_model: Qdrant/bm25
+  sparse_embedding_timeout_seconds: 60
+
+  # ---------------------------------------------------------------------------
+  # Temperatures
+  # ---------------------------------------------------------------------------
+
+  temperature:
+    language: 0.0
+    router: 0.0
+    catalog_agent: 0.3
+    logistics_agent: 0.2
+    cart_agent: 0.0
+    memory_agent: 0.0
+    recommendation_parser: 0.0
+    product_normalizer: 0.0
+    recommendation_ranker: 0.0
+    reflection: 0.1
+    composer: 0.5
+
+  # ---------------------------------------------------------------------------
+  # Maximum output tokens
+  # ---------------------------------------------------------------------------
+
+  max_tokens:
+    router: 1000
+    agent: 1000
+    reflection: 1000
+    composer: 1000
+
+  timeout_seconds: 30
+  max_retries: 3

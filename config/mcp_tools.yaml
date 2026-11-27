@@ -1,0 +1,40 @@
+# Local reference copy of Kapruka's MCP tool surface, for prompt-building and docs.
+# The live tool schema is always fetched from the MCP server at startup — this file
+# is documentation only, never the runtime source of truth.
+mcp_server:
+  name: kapruka
+  url_env: KAPRUKA_MCP_URL
+  transport: streamable_http
+  auth_required: false
+  rate_limits:
+    requests_per_minute: 60
+    orders_per_hour: 30
+
+tools:
+  - name: kapruka_search_products
+    purpose: "Search the catalog by keyword with category, price range, stock, and sort filters."
+    params: [q, category, min_price, max_price, in_stock_only, sort, limit, cursor, currency]
+
+  - name: kapruka_get_product
+    purpose: "Full details for any product by ID — name, price, stock, variants, images, shipping, direct URL."
+    params: [product_id, currency]
+
+  - name: kapruka_list_categories
+    purpose: "Top-level category names with browse URLs."
+    params: [depth]
+
+  - name: kapruka_list_delivery_cities
+    purpose: "Search Kapruka's delivery network by canonical name or vernacular alias."
+    params: [query, limit]
+
+  - name: kapruka_check_delivery
+    purpose: "Check whether an order can be delivered to a city on a given date. Flat LKR rate, perishable warning for cake/flower/combo products."
+    params: [city, delivery_date, product_id]
+
+  - name: kapruka_create_order
+    purpose: "Create a guest-checkout order and return a click-to-pay URL. No Kapruka account required. Prices locked 60 minutes, multi-currency, capped at 30 orders/hr per IP."
+    params: [cart, recipient, delivery, sender, gift_message, currency]
+
+  - name: kapruka_track_order
+    purpose: "Look up status, recipient, items, and timestamped delivery progress for any Kapruka order."
+    params: [order_number]
