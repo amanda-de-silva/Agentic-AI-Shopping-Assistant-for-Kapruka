@@ -1,0 +1,3 @@
+"""
+Kapruka MCP integration package.
+"""
