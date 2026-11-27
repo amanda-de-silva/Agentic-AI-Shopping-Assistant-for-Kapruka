@@ -1,0 +1,27 @@
+# Local dev convenience only. Supabase, Qdrant, and Langfuse are cloud services here —
+# this just containerizes the two things that are actually yours to run.
+version: "3.9"
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    env_file: .env
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app/backend
+      - ./config:/app/config
+    command: uvicorn backend.main:app --host 0.0.0.0 --port 8000 --reload
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    env_file: frontend/.env
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    command: npm run dev -- --host 0.0.0.0
